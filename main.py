@@ -25,28 +25,104 @@
 ########################################################################
 """
 from board_state import Board
+from brain import Brain
+from consts import ALPHA as alpha, GAMMA as gamma, EPSILON as epsilon
+from consts import WIN as winReward, LOSE as loseReward
+
+
+
 def main():
     myBoard = Board()   # Init empty bpard
-    myBoard.display()   #draw board
+    p1 = Brain(1)
+    p2 = Brain(2)
+    myBoard.displayBoard()   #draw board
+    myBoard.displayInfo()
+
     print('^ Starting state')
 
-    #keep track of cycles
-    #iterate through number of games
-    # for _ in range(2):
-    #     #reset board
-    #     print('\nResetting')
-    #     myBoard.resetBoard()
-    #     myBoard.display()   #draw board
-    #     print('Iteration:', _)
+    print(p1.printValues())
+    print(p2.printValues())
 
+
+    #keep track of cycles
+    # iterate through number of games
+    for _ in range(50):
+        #reset board
+        print('\nResetting')
+        myBoard.resetBoard()
+        print('Iteration:', _)
+     
         #while game not over
-            #save current game state so agents can manip and revert when they choose an action
             #p1.chooseAction
             #p2.chooseAction
             #
-        # while myBoard.winner != 0:
-     
-    ## Horizontal win test
+        while True:
+            print('\n==ROUND START==')
+            print('round start board.winner', myBoard.winner)
+            # save current game state so agents can manip and revert when they choose an action
+            boardState = myBoard.board
+
+            p1action = p1.randomAction(boardState)
+            print('Player 1 placing in', p1action)
+            availableMoveLeft = not myBoard.placeMove(1, p1action)
+
+            print('After Player 1\'s move')
+            myBoard.displayBoard()
+
+            # print('availableMoveLeft', availableMoveLeft)
+            #player 2 can only make a move if p1 didnt tie or win
+            if availableMoveLeft == True:
+                p2action = p2.randomAction(boardState)
+                myBoard.placeMove(2, p2action)
+                print('Player 2 placing in in', p2action)
+
+            print('After Player 2\'s move')
+            myBoard.displayBoard()
+
+            
+
+            
+            if myBoard.winner == -1:
+                print('\nBreaking because the game is a tie.')
+                myBoard.displayBoard()
+                myBoard.displayInfo()
+                print('Tie!')
+                break;
+            if myBoard.winner != 0:
+                print('\nBreaking because there is a winner.')
+                myBoard.displayBoard()
+                myBoard.displayInfo()
+                print('Player %s won!' % myBoard.winner)
+                break;
+            #p1 go
+            #check for win
+            #p2 go
+            #check for win
+
+def test():
+    myBoard = Board()   # Init empty bpard
+    myBoard.displayBoard()   #draw board
+    print('^ Starting state')
+
+    myBoard.placeMove(6, (0,0))
+    myBoard.placeMove(6, (0,1))
+    myBoard.placeMove(6, (0,2))
+
+    myBoard.placeMove(6, (1,0))
+    myBoard.placeMove(6, (1,1))
+    myBoard.placeMove(6, (1,2))
+
+    myBoard.placeMove(6, (2,0))
+    myBoard.placeMove(6, (2,1))
+
+    myBoard.displayBoard()
+
+    state = myBoard.board
+
+    p1 = Brain()
+
+
+     ## Horizontal win test
     # for r in range(3):
     #     for c in range(3):
     #         print('Making a move at %s,%s' % (r,c))
@@ -65,26 +141,19 @@ def main():
     #     myBoard.resetBoard()
     #
     ## Diagonal win test
-    myBoard.placeMove(3, (0,0))
-    myBoard.placeMove(3, (1,1))
-    myBoard.placeMove(3, (2,2))
-    myBoard.display()
-    myBoard.resetBoard()
-    #other diagonal
-    myBoard.placeMove(4, (0,2))
-    myBoard.placeMove(4, (1,1))
-    myBoard.placeMove(4, (2,0))
-    myBoard.display()
-
-
-    
-
-    # print(myBoard.board[(0,0)]) #this is actually valid and you can index by tuples
-
-    
-
+    # myBoard.placeMove(3, (0,0))
+    # myBoard.placeMove(3, (1,1))
+    # myBoard.placeMove(3, (2,2))
+    # myBoard.display()
+    # myBoard.resetBoard()
+    ##other diagonal
+    # myBoard.placeMove(4, (0,2))
+    # myBoard.placeMove(4, (1,1))
+    # myBoard.placeMove(4, (2,0))
+    # myBoard.display()
     
 
     
 
 main()
+# test()
