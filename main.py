@@ -33,71 +33,73 @@ from consts import WIN as winReward, LOSE as loseReward
 
 def main():
     myBoard = Board()   # Init empty bpard
-    p1 = Brain(1)
-    p2 = Brain(2)
+    p1 = Brain(1, 'X')   # Player X
+    p2 = Brain(-1, 'O')  # Player O
+
     myBoard.displayBoard()   #draw board
     myBoard.displayInfo()
-
-    print('^ Starting state')
-
     print(p1.printValues())
     print(p2.printValues())
+    print('^ Starting state')
+
 
 
     #keep track of cycles
     # iterate through number of games
-    for _ in range(50):
+    for _ in range(1):
         #reset board
         print('\nResetting')
         myBoard.resetBoard()
         print('Iteration:', _)
-     
-        #while game not over
-            #p1.chooseAction
-            #p2.chooseAction
-            #
+
+
         while True:
             print('\n==ROUND START==')
             print('round start board.winner', myBoard.winner)
             # save current game state so agents can manip and revert when they choose an action
-            boardState = myBoard.board
+            boardState = myBoard.getBoard()
+            positions = myBoard.getPositions()
 
-            p1action = p1.randomAction(boardState)
-            print('Player 1 placing in', p1action)
-            availableMoveLeft = not myBoard.placeMove(1, p1action)
-
-            print('After Player 1\'s move')
+            ## replacing this with p1.chooseAction
+            p1action = p1.randomAction(boardState, positions)
+            gameOver = myBoard.placeMove(p1.player, p1action)
+            print('Player 1(X) placing in', p1action)
+            print('Player 1(X)\'s move result')
             myBoard.displayBoard()
-
-            # print('availableMoveLeft', availableMoveLeft)
-            #player 2 can only make a move if p1 didnt tie or win
-            if availableMoveLeft == True:
-                p2action = p2.randomAction(boardState)
-                myBoard.placeMove(2, p2action)
-                print('Player 2 placing in in', p2action)
-
-            print('After Player 2\'s move')
-            myBoard.displayBoard()
-
+            ##
             
+            # p1action =p1.chooseAction(boardState, positions)
+            # gameOver = myBoard.placeMove(p1.player, p1action)
+            #
 
+            print('After player 1(X)\'s move: len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)
+
+
+            #Player 2 can only make a move if there are moves left to be played and p1 didnt win
+            if not gameOver:
+                print('len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)
+                p2action = p2.randomAction(boardState, positions)
+                gameOver = myBoard.placeMove(p2.player, p2action)
+                print('Player -1(O) placing in in', p2action)
+                print('Player -1(O)\'s move result')
+                myBoard.displayBoard()
+                print('After player -1(O)\'s move: len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)            
             
-            if myBoard.winner == -1:
+            # No more available positions on the board. Tie.
+            if len(positions) == 0 and myBoard.winner == 0:
                 print('\nBreaking because the game is a tie.')
                 myBoard.displayBoard()
                 myBoard.displayInfo()
                 print('Tie!')
                 break;
+
+            # Found a winner
             if myBoard.winner != 0:
                 print('\nBreaking because there is a winner.')
                 myBoard.displayBoard()
                 myBoard.displayInfo()
                 print('Player %s won!' % myBoard.winner)
                 break;
-            #p1 go
-            #check for win
-            #p2 go
-            #check for win
 
 def test():
     myBoard = Board()   # Init empty bpard

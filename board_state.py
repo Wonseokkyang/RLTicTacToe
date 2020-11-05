@@ -19,7 +19,14 @@
 ##                          Notes                                     ##
 ########################################################################
 #   create X and O shapes for easy placement
-#   board is a 3x3 array with 0 for empty, 1 for p1, and 2 for p2
+#   board is a 3x3 array with 
+#       0 = empty space
+#       1 = player 1
+#       -1 = player2
+#   ========================
+#   last working on adding available spots to board for brain
+#   ==============
+#
 ########################################################################
 """
 from graphics import *
@@ -32,19 +39,26 @@ class Board:
         self.board = np.zeros((3,3), dtype='i4')
         #0 for no winner, 1 for p1 winner, 2 for p2 winner, -1 for tie
         self.winner = 0 #holds the winning player
+        self.setPositions()
+        #has self.position = []
     ## end __init__
 
-    # Place <player> at board[<position>] and return whether or not the game can continue.
+    # Place <player> at board[<position>] and return whether or not the game is over.
     # placeMove(<int>, <tuple>)
     # Return: 
     #   True - there are valid positions left on the board and there is no winner.
     #   False - there are either no valid positions left or a player won.
     def placeMove(self, player, position):
-        if self.board[position] == 0:   #only if empty
+        if self.board[position] != 0:
+            raise Exception('ERROR: invalid placeMove(player, position) position.')
+            exit()
+        elif self.board[position] == 0: #only if empty
             self.board[position] = player
-            return self.checkWin() #after valid placement, check to see if it's a winning/tie move
+            #remove that position from self.positions
+            self.positions.remove(position)
+            return self.checkGameOver() #after valid placement, check to see if it's a winning/tie move
         else:
-            print('ERROR: invalid placeMove position')
+            print('MESSAGE: this should never print.')
             return False
     ## end placeMove
 
@@ -58,7 +72,7 @@ class Board:
     # Return:
     #   True - there is a tie or a win
     #   False - the game can continue
-    def checkWin(self):
+    def checkGameOver(self):
         # Checking rows for win con
         for r in range(len(self.board)):
             x, y, z = self.board[r]
@@ -66,11 +80,11 @@ class Board:
                 self.winner = x
                 return True
         # Check col for win con
-        for row in range(3): #number of elements in a row
-            if (self.board[(0, row)] != 0 and 
-                self.board[(0, row)] == self.board[(1, row)] and
-                self.board[(0, row)] == self.board[(2, row)]):
-                self.winner = self.board[(0,row)]
+        for col in range(3): #number of elements in a row
+            if (self.board[(0, col)] != 0 and 
+                self.board[(0, col)] == self.board[(1, col)] and
+                self.board[(0, col)] == self.board[(2, col)]):
+                self.winner = self.board[(0,col)]
                 return True
         # Check diag for win con
         if (self.board[(0,0)] != 0 and
@@ -83,21 +97,52 @@ class Board:
             self.board[(0,2)] == self.board[(2,0)]):
             self.winner = self.board[(0,2)]
             return True
-        # Check to see if there are still valid empty positions left
-        elif 0 in self.board[:,:]:  #there's an empty spot left so game is not over
-            return False
-        else:   #tie so game over
-            self.winner = -1    
+        # Check for tie
+        if len(self.positions) == 0:  #No more spots so game over
             return True
-    ## end checkWin
+        else:   # Not a tie so game not over
+            return False
+    ## end checkGameOver
 
+    #optimization oportunity. it's only called once so initialize a list of
+    # Check self.board and get all available/empty spaces
+    def setPositions(self):
+        positions = []
+        for x in range(3):
+            for y in range(3):
+                if self.board[(x,y)] == 0:
+                    positions.append((x,y))
+        self.positions = positions
+    ## end setPositions
+
+    # Return: list of available positions
+    def getPositions(self):
+        return self.positions
+    ## end getPositions
+
+    def getBoard(self):
+        return self.board
+    ## end getBoard
+        
     # Temp text game board so I can work out agent logic in main
     # todo: graphic display instead of terminal print
     def displayBoard(self):
         print('==============')
         print('= Game Board =')
-        for _ in self.board:
-            print('  ', _)
+        # for row in self.board:
+        #     print('  ', row)
+        for row in self.board:
+            toPrint = ' | '
+            for col in row:
+                if col == 1: 
+                    toPrint += 'X'
+                elif col == -1: 
+                    toPrint +=  'O'
+                else:
+                    toPrint += ' '
+                toPrint += ' | '
+            print(toPrint)
+
     ## end displayBoard
 
     def displayInfo(self):
