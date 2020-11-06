@@ -34,7 +34,7 @@
 """
 import pandas as pd
 import numpy as np
-from consts import ALPHA, GAMMA, EPSILON
+from consts import ALPHA, GAMMA, EPSILON, WIN, LOSE, TIE
 import random
 
 class Brain:
@@ -48,11 +48,19 @@ class Brain:
         self.q_table = {}   # hashed board state : q-value
         self.history = []   # history of moves to update at end of game
     
-    # Applies value iteration formula to move history 
-    # def learn(self, reward):
-    #     for state in reversed(self.history):
-    #         value = self.history.get(state, 0) 
-    #         # self.q_table += 
+    # Applies value iteration formula from move history to q_table
+    def learn(self, winner):
+        if winner == self.player: reward = WIN
+        elif winner == 0: reward == TIE
+        else: reward = LOSE
+        for state in reversed(self.history):
+            value = self.q_table.get(state, 0)
+            self.q_table.update({state : value})
+            #the q-value of the history state in q-table += learning rate * (discount factor*reward - the current value at that state)
+            self.q_table[state] += self.alpha * (self.gamma * reward - self.q_table[state])
+            #update reward to the q-value of the last move on stack
+            reward = self.q_table[state]
+    ## end learn
 
     # Choose a random move according to exploration/epsilon chance or
     # from all available positions, make the move with the highest q-value

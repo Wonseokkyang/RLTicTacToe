@@ -95,8 +95,8 @@ def main():
                 myBoard.displayInfo()
                 print('Tie!')
                 # Learn from this iteration of games
-                # p1.learn(myBoard.winner)
-                # p2.learn(myBoard.winner)
+                p1.learn(myBoard.winner)
+                p2.learn(myBoard.winner)
                 break
             # Found a winner
             if myBoard.winner != 0:
@@ -104,8 +104,8 @@ def main():
                 myBoard.displayBoard()
                 myBoard.displayInfo()
                 print('Player %s won!' % myBoard.winner)
-                # p1.learn(myBoard.winner)
-                # p2.learn(myBoard.winner)
+                p1.learn(myBoard.winner)
+                p2.learn(myBoard.winner)
                 break
 
         print('p1.q_table', p1.q_table)
