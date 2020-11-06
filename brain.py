@@ -40,19 +40,36 @@ import random
 class Brain:
     #List of actions provided during first func call
     def __init__(self, player, name = '', alpha=ALPHA, gamma=GAMMA, epsilon=EPSILON):
-        self.player = player
-        self.name = name
+        self.player = player    # player number
+        self.name = name        # player's character ('O' | 'X')
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
-        # self.q_table = pd.DataFrame(columns=self.actions, dtype=np.float64)
+        self.q_table = {}   # hashed board state : q-value
+        self.history = []   # history of moves to update at end of game
     
-    # Return <tuple> coord of action to take
-    def chooseAction(self, boardState):
-        self.state_exist_check(boardState)  #append to q-table if it doesnt exist already
-        action = np.random.choice()
+    # Choose a random move according to exploration/epsilon chance or
+    # from all available positions, make the move with the highest q-value
+    def chooseAction(self, boardState, availPositions):
+        # Roll to see agent chooses to explore or not
+        if np.random.uniform() > self.epsilon:
+            action = self.randomAction(boardState, availPositions)
+        else:
+            valMax = -999 #ridiculous negative number works as ceiling value
+            # Use dict self. to get q-values of all possible states
+            for pos in availPositions:
+                boardSim = boardState      #temp board to manip and check q-values
+                boardSim[pos] = self.player    #simulating making a move at position pos
+                boardSimHash = self.convertAndHash(boardSim)
+                simQval = self.q_table.get(boardSimHash, 0)  #get q for simulated move
+                #find max of all pos #I think this can be optimized
+                if simQval > valMax:
+                    valMax = simQval
+                    action = pos
+        return action
+    ## end chooseAction
 
-    # choose random from list of valid positions
+    # Choose random from list of valid positions
     # Returns: random valid action
     def randomAction(self, boardState, availPositions):
         #something
@@ -83,6 +100,18 @@ class Brain:
         action = availPositions[random.randint(0, len(availPositions)-1)]
         print('choose action,', action)
         return action
+
+    # Converts state to a single players perspective and flattens to str to return
+    def convertAndHash(self, state):
+        # Convert if not player 1
+        convert = state
+        if self.player == -1:
+            invert = lambda _ : _ *(-1)
+            convert = invert(convert)
+        # Return hash
+        return str(convert.resize(9))
+    ## end convertAndHash
+
 
     def printValues(self):
         print(self.__class__.__name__)
