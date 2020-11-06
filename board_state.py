@@ -49,13 +49,16 @@ class Board:
     #   True - there are valid positions left on the board and there is no winner.
     #   False - there are either no valid positions left or a player won.
     def placeMove(self, player, position):
-        if self.board[position] != 0:
+        print('TROUBLESHOOT: player =', player, 'position =', position)
+        print('type: player', type(player), 'position', type(position))
+        print('printing board[(position)]', self.board[(position)])
+        if self.board[(position)] != 0:
             raise Exception('ERROR: invalid placeMove(player, position) position.')
             exit()
-        elif self.board[position] == 0: #only if empty
-            self.board[position] = player
+        elif self.board[(position)] == 0: #only if empty
+            self.board[(position)] = player
             #remove that position from self.positions
-            self.positions.remove(position)
+            self.positions.remove((position))
             return self.checkGameOver() #after valid placement, check to see if it's a winning/tie move
         else:
             print('MESSAGE: this should never print.')

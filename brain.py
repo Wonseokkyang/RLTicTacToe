@@ -48,6 +48,12 @@ class Brain:
         self.q_table = {}   # hashed board state : q-value
         self.history = []   # history of moves to update at end of game
     
+    # Applies value iteration formula to move history 
+    # def learn(self, reward):
+    #     for state in reversed(self.history):
+    #         value = self.history.get(state, 0) 
+    #         # self.q_table += 
+
     # Choose a random move according to exploration/epsilon chance or
     # from all available positions, make the move with the highest q-value
     def chooseAction(self, boardState, availPositions):
@@ -55,17 +61,17 @@ class Brain:
         if np.random.uniform() > self.epsilon:
             action = self.randomAction(boardState, availPositions)
         else:
-            valMax = -999 #ridiculous negative number works as ceiling value
-            # Use dict self. to get q-values of all possible states
+            valMax = -999
+            # Choose the move with the highest q-value
             for pos in availPositions:
-                boardSim = boardState      #temp board to manip and check q-values
-                boardSim[pos] = self.player    #simulating making a move at position pos
+                boardSim = boardState.copy()
+                boardSim[(pos)] = self.player
                 boardSimHash = self.convertAndHash(boardSim)
                 simQval = self.q_table.get(boardSimHash, 0)  #get q for simulated move
-                #find max of all pos #I think this can be optimized
                 if simQval > valMax:
                     valMax = simQval
                     action = pos
+            self.history.append(self.convertAndHash(boardState))
         return action
     ## end chooseAction
 
@@ -98,21 +104,25 @@ class Brain:
         
         #use list of available positions
         action = availPositions[random.randint(0, len(availPositions)-1)]
-        print('choose action,', action)
+        self.history.append(self.convertAndHash(boardState))
         return action
 
     # Converts state to a single players perspective and flattens to str to return
     def convertAndHash(self, state):
         # Convert if not player 1
-        convert = state
+        convert = state.copy()
+        print('convert =',convert)
         if self.player == -1:
             invert = lambda _ : _ *(-1)
             convert = invert(convert)
+            print('inverted convert =', convert)
         # Return hash
-        return str(convert.resize(9))
+        return str(np.reshape(convert, -1)) #converts to 1d str
     ## end convertAndHash
 
+    # clearHistory()
 
+    # Mainly for testing and troubleshooting
     def printValues(self):
         print(self.__class__.__name__)
         print('self.player=', self.player)

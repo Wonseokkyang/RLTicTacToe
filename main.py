@@ -21,6 +21,11 @@
 ########################################################################
 ##                          Notes                                     ##
 ########################################################################
+#   braindump: 
+#   should I track the the list of moves made? that way I can back propagate
+#   the reward values after the game ends. 
+#   Brain: q_table, does the math for q-learning, track previous moves?
+#
 #   
 ########################################################################
 """
@@ -52,28 +57,27 @@ def main():
         myBoard.resetBoard()
         print('Iteration:', _)
 
-
         while True:
             print('\n==ROUND START==')
             print('round start board.winner', myBoard.winner)
             # save current game state so agents can manip and revert when they choose an action
             boardState = myBoard.getBoard()
             positions = myBoard.getPositions()
-
+            print('board type:', type(boardState))
+            print('available positions', positions)
             ## replacing this with p1.chooseAction
-            p1action = p1.randomAction(boardState, positions)
+            # p1action = p1.randomAction(boardState, positions)
+            # gameOver = myBoard.placeMove(p1.player, p1action)
+            ##
+            ## testing chooseAction function
+            p1action = p1.chooseAction(boardState, positions)
+            print('p1action type', type(p1action))
             gameOver = myBoard.placeMove(p1.player, p1action)
+            ##
             print('Player 1(X) placing in', p1action)
             print('Player 1(X)\'s move result')
             myBoard.displayBoard()
-            ##
-            
-            # p1action =p1.chooseAction(boardState, positions)
-            # gameOver = myBoard.placeMove(p1.player, p1action)
-            #
-
             print('After player 1(X)\'s move: len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)
-
 
             #Player 2 can only make a move if there are moves left to be played and p1 didnt win
             if not gameOver:
@@ -83,23 +87,33 @@ def main():
                 print('Player -1(O) placing in in', p2action)
                 print('Player -1(O)\'s move result')
                 myBoard.displayBoard()
-                print('After player -1(O)\'s move: len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)            
-            
+                # print('After player -1(O)\'s move: len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)            
             # No more available positions on the board. Tie.
             if len(positions) == 0 and myBoard.winner == 0:
                 print('\nBreaking because the game is a tie.')
                 myBoard.displayBoard()
                 myBoard.displayInfo()
                 print('Tie!')
-                break;
-
+                # Learn from this iteration of games
+                # p1.learn(myBoard.winner)
+                # p2.learn(myBoard.winner)
+                break
             # Found a winner
             if myBoard.winner != 0:
                 print('\nBreaking because there is a winner.')
                 myBoard.displayBoard()
                 myBoard.displayInfo()
                 print('Player %s won!' % myBoard.winner)
-                break;
+                # p1.learn(myBoard.winner)
+                # p2.learn(myBoard.winner)
+                break
+
+        print('p1.q_table', p1.q_table)
+        print('p2.q_table', p2.q_table)
+        print('p1.history', p1.history)
+        print('p2.history', p2.history)
+
+
 
 def test():
     myBoard = Board()   # Init empty bpard

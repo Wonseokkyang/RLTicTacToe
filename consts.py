@@ -23,3 +23,4 @@ EPSILON = 0.9           #the weight of the algo's 'greediness', less greedy = ex
 # Reward values:
 WIN = 10
 LOSE = -10
+TIE = -1
