@@ -38,9 +38,9 @@ class Board:
         #create a 3x3 2D array with all 0's
         self.board = np.zeros((3,3), dtype='i4')
         #0 for no winner, 1 for p1 winner, 2 for p2 winner, -1 for tie
-        self.winner = 0 #holds the winning player
+        self.winner = 0
         self.setPositions()
-        #has self.position = []
+        #self.position = []
     ## end __init__
 
     # Place <player> at board[<position>] and return whether or not the game is over.
@@ -49,25 +49,22 @@ class Board:
     #   True - there are valid positions left on the board and there is no winner.
     #   False - there are either no valid positions left or a player won.
     def placeMove(self, player, position):
-        print('TROUBLESHOOT: player =', player, 'position =', position)
-        print('type: player', type(player), 'position', type(position))
-        print('printing board[(position)]', self.board[(position)])
         if self.board[(position)] != 0:
             raise Exception('ERROR: invalid placeMove(player, position) position.')
-            exit()
         elif self.board[(position)] == 0: #only if empty
             self.board[(position)] = player
             #remove that position from self.positions
             self.positions.remove((position))
             return self.checkGameOver() #after valid placement, check to see if it's a winning/tie move
         else:
-            print('MESSAGE: this should never print.')
+            print('MESSAGE from placeMove(): this should never print.')
             return False
     ## end placeMove
 
     def resetBoard(self):
         self.board.fill(0)
         self.winner = 0
+        self.setPositions()
     ## end resetBoard
 
     #this can be optimized by only checking the row, col, and diag of the newly placed move
@@ -132,22 +129,17 @@ class Board:
     def displayBoard(self):
         print('==============')
         print('= Game Board =')
-        # for row in self.board:
-        #     print('  ', row)
         for row in self.board:
             toPrint = ' | '
             for col in row:
-                if col == 1: 
-                    toPrint += 'X'
-                elif col == -1: 
-                    toPrint +=  'O'
-                else:
-                    toPrint += ' '
+                if col == 1: toPrint += 'X'
+                elif col == -1: toPrint +=  'O'
+                else: toPrint += ' '
                 toPrint += ' | '
             print(toPrint)
-
     ## end displayBoard
 
     def displayInfo(self):
         print('Winner:', self.winner)
+        print('Available Positions:', self.positions)
     ## end displayInfo

@@ -47,11 +47,11 @@ class Brain:
         self.epsilon = epsilon
         self.q_table = {}   # hashed board state : q-value
         self.history = []   # history of moves to update at end of game
-    
+            
     # Applies value iteration formula from move history to q_table
     def learn(self, winner):
         if winner == self.player: reward = WIN
-        elif winner == 0: reward == TIE
+        elif winner == 0: reward = TIE
         else: reward = LOSE
         for state in reversed(self.history):
             value = self.q_table.get(state, 0)
@@ -60,6 +60,8 @@ class Brain:
             self.q_table[state] += self.alpha * (self.gamma * reward - self.q_table[state])
             #update reward to the q-value of the last move on stack
             reward = self.q_table[state]
+        #clear history after learning from it
+        self.history.clear()
     ## end learn
 
     # Choose a random move according to exploration/epsilon chance or
@@ -68,18 +70,36 @@ class Brain:
         # Roll to see agent chooses to explore or not
         if np.random.uniform() > self.epsilon:
             action = self.randomAction(boardState, availPositions)
+            print('Chose random action')
         else:
+            print('inside chooseAction() else:')
             valMax = -999
             # Choose the move with the highest q-value
             for pos in availPositions:
+                print('for pos in positions-- pos =', pos)
                 boardSim = boardState.copy()
                 boardSim[(pos)] = self.player
                 boardSimHash = self.convertAndHash(boardSim)
                 simQval = self.q_table.get(boardSimHash, 0)  #get q for simulated move
+                print('boardState =', boardState)
+                print('boardSim =', boardSim)
+                print('boardSimHash =', boardSimHash)
+
+                print('before if simQval > valMax:')
+                print('simQval=', simQval)
+                print('valMax=', valMax)
+
                 if simQval > valMax:
                     valMax = simQval
                     action = pos
+                print('before if simQval > valMax:')
+                print('simQval=', simQval)
+                print('valMax=', valMax)
+                print('action=', action)
             self.history.append(self.convertAndHash(boardState))
+            print('Outside for loop but still in chooseAction')
+            print('action:', action, 'with value', valMax)
+            # print(self.q_table)
         return action
     ## end chooseAction
 
@@ -115,6 +135,19 @@ class Brain:
         self.history.append(self.convertAndHash(boardState))
         return action
 
+    def convertAndHash(self, state):
+        convert = state.copy()
+        # Convert if not player 1
+        # # print('convert =',convert)
+        # if self.player == -1:
+        #     invert = lambda _ : _ *(-1)
+        #     convert = invert(convert)
+        # #     print('inverted convert =', convert)
+        # Return hash
+        return str(np.reshape(convert, -1)) #converts to 1d str
+    ## end convertAndHash
+
+        """
     # Converts state to a single players perspective and flattens to str to return
     def convertAndHash(self, state):
         # Convert if not player 1
@@ -127,8 +160,8 @@ class Brain:
         # Return hash
         return str(np.reshape(convert, -1)) #converts to 1d str
     ## end convertAndHash
+    """
 
-    # clearHistory()
 
     # Mainly for testing and troubleshooting
     def printValues(self):
