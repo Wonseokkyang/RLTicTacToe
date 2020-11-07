@@ -50,11 +50,17 @@ class Brain:
             
     # Applies value iteration formula from move history to q_table
     def learn(self, winner):
+        print('Inside learn.')
+        print('Q-table before:', self.q_table)
+        print('History:', self.history)
         if winner == self.player: reward = WIN
         elif winner == 0: reward = TIE
         else: reward = LOSE
         for state in reversed(self.history):
+            print('Inside for loop for state in reversed history.')
             value = self.q_table.get(state, 0)
+            print('value =', value)
+            print('{state :  value}=', {state : value})
             self.q_table.update({state : value})
             #the q-value of the history state in q-table += learning rate * (discount factor*reward - the current value at that state)
             self.q_table[state] += self.alpha * (self.gamma * reward - self.q_table[state])
@@ -62,45 +68,56 @@ class Brain:
             reward = self.q_table[state]
         #clear history after learning from it
         self.history.clear()
+        print('History:', self.history)
+        print('Q-table after:', self.q_table)
+
     ## end learn
 
     # Choose a random move according to exploration/epsilon chance or
     # from all available positions, make the move with the highest q-value
     def chooseAction(self, boardState, availPositions):
+        self.history.append(self.convertAndHash(boardState))
+
         # Roll to see agent chooses to explore or not
         if np.random.uniform() > self.epsilon:
-            action = self.randomAction(boardState, availPositions)
-            print('Chose random action')
+            actionMax = self.randomAction(boardState, availPositions)
+            # print('Chose random action')
         else:
-            print('inside chooseAction() else:')
+            # print('inside chooseAction() else:')
             valMax = -999
             # Choose the move with the highest q-value
             for pos in availPositions:
-                print('for pos in positions-- pos =', pos)
+                # print('for pos in positions-- pos =', pos)
                 boardSim = boardState.copy()
                 boardSim[(pos)] = self.player
                 boardSimHash = self.convertAndHash(boardSim)
                 simQval = self.q_table.get(boardSimHash, 0)  #get q for simulated move
-                print('boardState =', boardState)
-                print('boardSim =', boardSim)
-                print('boardSimHash =', boardSimHash)
+                self.q_table[boardSimHash] = simQval
+                # print('after self.q_table.get(boardSimHash, 0), s_table is:', self.q_table)
+                # print('boardState =', boardState)
+                # print('boardSim =', boardSim)
+                # print('boardSimHash =', boardSimHash)
 
-                print('before if simQval > valMax:')
-                print('simQval=', simQval)
-                print('valMax=', valMax)
+                # print('before if simQval > valMax:')
+                # print('simQval=', simQval)
+                # print('valMax=', valMax)
 
                 if simQval > valMax:
                     valMax = simQval
-                    action = pos
-                print('before if simQval > valMax:')
-                print('simQval=', simQval)
-                print('valMax=', valMax)
-                print('action=', action)
-            self.history.append(self.convertAndHash(boardState))
-            print('Outside for loop but still in chooseAction')
-            print('action:', action, 'with value', valMax)
+                    actionMax = pos
+                    boardMax = boardSimHash
+                # print('before if simQval > valMax:')
+                # print('simQval=', simQval)
+                # print('valMax=', valMax)
+                # print('actionMax=', actionMax)
+                # print('boardMax=', boardMax)
+            
+            self.history.append(boardMax)
+            # print('Outside for loop but still in chooseAction')
+            # print('actionMax:', actionMax, 'with value', valMax)
+            # print('history:', self.history)
             # print(self.q_table)
-        return action
+        return actionMax
     ## end chooseAction
 
     # Choose random from list of valid positions

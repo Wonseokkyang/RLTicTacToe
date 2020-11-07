@@ -52,7 +52,7 @@ def main():
 
     
     # iterate through number of games
-    for _ in range(100):
+    for _ in range(1):
         print('\nResetting')
         myBoard.resetBoard()
         print('Iteration:', _)
@@ -109,9 +109,36 @@ def main():
 
 # A function to save agent's memory in case I want to use it in the future for testing
 def saveAgent(player):
-    wfile = csv.writer(open('player'+str(player.name)+'memory.csv', 'w'))
+    wfile = csv.DictWriter(open('player'+str(player.name)+'memory.csv', 'w', newline=''), fieldnames=['state', 'action'])
+    wfile.writeheader()
     for key,val in player.q_table.items():
-        wfile.writerow([key, val])
+        print('{key:value}', {key:val})
+        wfile.writerow({'state' : key,  'action' : val})
+
+def loadAgent(player):
+    rfile = csv.DictReader(open('player'+str(player.name)+'memory.csv', 'r'))
+    for row in rfile:  
+        print('row:', row)
+        
+        # for x, y in row[:-1].split(','):
+        #     print('printing row: ', row[:-1])
+        #     print(type(row))
+            
+        #     split_ =row.split(',')
+        #     print('printing split_: ', split_)
+
+        # print('printing key, val:', row[0], row[1])
+        # kv = {row[0]:row}
+        # player.q_table.update({row[0]:row[1]})
+
+def testingFun():
+    #testing reading csv into q-table of p1 
+    p1 = Brain(1, 'X')
+    print('Checking p1.q_table.', p1.q_table)
+    loadAgent(p1)
+
+    print('Checking p1.q_table.', p1.q_table)
+
 
 def test():
     myBoard = Board()   # Init empty bpard
@@ -165,9 +192,8 @@ def test():
     # myBoard.placeMove(4, (1,1))
     # myBoard.placeMove(4, (2,0))
     # myBoard.display()
-    
 
-    
 
 main()
+# testingFun()
 # test()
