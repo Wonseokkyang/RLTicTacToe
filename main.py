@@ -52,7 +52,7 @@ def main():
 
     
     # iterate through number of games
-    for _ in range(1):
+    for _ in range(500):
         print('\nResetting')
         myBoard.resetBoard()
         print('Iteration:', _)
@@ -104,7 +104,7 @@ def main():
     # print('p1.q_table', p1.q_table)
     # print('p2.q_table', p2.q_table)
     saveAgent(p1)
-    saveAgent(p2)
+    # saveAgent(p2)
 
 
 # A function to save agent's memory in case I want to use it in the future for testing
@@ -118,18 +118,9 @@ def saveAgent(player):
 def loadAgent(player):
     rfile = csv.DictReader(open('player'+str(player.name)+'memory.csv', 'r'))
     for row in rfile:  
-        print('row:', row)
-        
-        # for x, y in row[:-1].split(','):
-        #     print('printing row: ', row[:-1])
-        #     print(type(row))
-            
-        #     split_ =row.split(',')
-        #     print('printing split_: ', split_)
-
-        # print('printing key, val:', row[0], row[1])
-        # kv = {row[0]:row}
-        # player.q_table.update({row[0]:row[1]})
+        # print(row)
+        # print(row['state'], row['action'])
+        player.q_table[row['state']] = row['action']
 
 def testingFun():
     #testing reading csv into q-table of p1 
@@ -163,37 +154,7 @@ def test():
     p1 = Brain()
 
 
-     ## Horizontal win test
-    # for r in range(3):
-    #     for c in range(3):
-    #         print('Making a move at %s,%s' % (r,c))
-    #         myBoard.placeMove(1, (r,c))
-    #         myBoard.display()
-    #     print('\nResetting board')
-    #     myBoard.resetBoard()
-    #  
-    ## Vertical win test
-    # for r in range(3):
-    #     for c in range(3):
-    #         print('Making a move at %s,%s' % (c, r))
-    #         myBoard.placeMove(2, (c, r))
-    #         myBoard.display()
-    #     print('\nResetting board')
-    #     myBoard.resetBoard()
-    #
-    ## Diagonal win test
-    # myBoard.placeMove(3, (0,0))
-    # myBoard.placeMove(3, (1,1))
-    # myBoard.placeMove(3, (2,2))
-    # myBoard.display()
-    # myBoard.resetBoard()
-    ##other diagonal
-    # myBoard.placeMove(4, (0,2))
-    # myBoard.placeMove(4, (1,1))
-    # myBoard.placeMove(4, (2,0))
-    # myBoard.display()
 
-
-main()
-# testingFun()
+# main()
+testingFun()
 # test()
