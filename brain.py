@@ -47,20 +47,24 @@ class Brain:
         self.epsilon = epsilon
         self.q_table = {}   # hashed board state : q-value
         self.history = []   # history of moves to update at end of game
-            
+
+    def reset(self):
+        self.q_table.clear()
+        self.history.clear()  
+        
     # Applies value iteration formula from move history to q_table
     def learn(self, winner):
-        print('Inside learn.')
-        print('Q-table before:', self.q_table)
-        print('History:', self.history)
+        # print('Inside learn.')
+        # print('Q-table before:', self.q_table)
+        # print('History:', self.history)
         if winner == self.player: reward = WIN
         elif winner == 0: reward = TIE
         else: reward = LOSE
         for state in reversed(self.history):
-            print('Inside for loop for state in reversed history.')
+            # print('Inside for loop for state in reversed history.')
             value = self.q_table.get(state, 0)
-            print('value =', value)
-            print('{state :  value}=', {state : value})
+            # print('value =', value)
+            # print('{state :  value}=', {state : value})
             self.q_table.update({state : value})
             #the q-value of the history state in q-table += learning rate * (discount factor*reward - the current value at that state)
             self.q_table[state] += self.alpha * (self.gamma * reward - self.q_table[state])
@@ -68,8 +72,8 @@ class Brain:
             reward = self.q_table[state]
         #clear history after learning from it
         self.history.clear()
-        print('History:', self.history)
-        print('Q-table after:', self.q_table)
+        # print('History:', self.history)
+        # print('Q-table after:', self.q_table)
 
     ## end learn
 
@@ -179,7 +183,6 @@ class Brain:
     ## end convertAndHash
     """
 
-
     # Mainly for testing and troubleshooting
     def printValues(self):
         print(self.__class__.__name__)
@@ -187,3 +190,5 @@ class Brain:
         print('self.alpha=', self.alpha)
         print('self.gamma=', self.gamma)
         print('self.epsilon=', self.epsilon)
+        print('self.q_table=', self.q_table)
+        print('self.history=', self.history)
