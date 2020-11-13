@@ -4,7 +4,8 @@
 #   
 #   Name: Won Seok Yang
 #   
-#
+#   The brain or decision making process of the agent as well as
+#   Q-learning function.
 #
 ########################################################################
 ##                          Resources                                 ##
