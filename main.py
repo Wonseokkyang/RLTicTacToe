@@ -49,8 +49,9 @@ def main():
     print('Results: \n P1 win count: %s\n P2 win count: %s\n Tie count: %s\n Total Games: %s' % play(myBoard, player1, player2, 1000))
 ## end main
 
-# play number of games and save learnings into player1.q_table and player2.q_table
-# requires player1 and player2 to be preset before function call
+# Play number of games and save learnings into player1.q_table 
+# and player2.q_table. Requires player1 and player2 to be preset 
+# before function call
 def play(gameboard, player1, player2, number):
     p1win = 0
     p2win = 0
@@ -62,10 +63,8 @@ def play(gameboard, player1, player2, number):
         
         while True:
             print('\n==ROUND START==')
-            # print('round start board.winner', gameboard.winner)
             boardState = gameboard.getBoard()
             positions = gameboard.getPositions()
-            # print('available positions', positions)
 
             p1action = player1.chooseAction(boardState, positions)
             gameOver = gameboard.placeMove(player1.player, p1action)
@@ -116,9 +115,10 @@ def play(gameboard, player1, player2, number):
     # saveAgent(p2)
 ## end play
 
-# A function to save agent's memory in case I want to use it in the future for testing
+# A function to save agent's memory for future testing
 def saveAgent(player):
-    wfile = csv.DictWriter(open('player'+str(player.name)+'memory.csv', 'w', newline=''), fieldnames=['state', 'action'])
+    wfile = csv.DictWriter(open('player'+str(player.name)+'memory.csv', 
+            'w', newline=''), fieldnames=['state', 'action'])
     wfile.writeheader()
     for key,val in player.q_table.items():
         # print('{key:value}', {key:val})
