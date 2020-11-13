@@ -63,6 +63,7 @@ class Brain:
 
     # Choose a random move according to exploration/epsilon chance or
     # from all available positions, make the move with the highest q-value
+    # Returns: Action with highest q-value from availPosition param
     def chooseAction(self, boardState, availPositions):
         self.history.append(self.convertAndHash(boardState))
 
@@ -96,6 +97,7 @@ class Brain:
         return action
 
     # Deferred converting for future implementation
+    # Returns: 1d arr of state parameter
     def convertAndHash(self, state):
         convert = state.copy()
         # Convert if not player 1
