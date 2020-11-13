@@ -11,7 +11,7 @@
 #   The target of each agent is to win the game. Make the move that
 #   makes the agent most likely to tie or win the game, prioritizing
 #   actions that would lead to eliminating any chance of loss. I do
-#   this with the mouse in mind.
+#   this with the mouse AI in mind.
 #
 ########################################################################
 ##                          Resources                                 ##
@@ -25,10 +25,6 @@
 #   should I track the the list of moves made? that way I can back propagate
 #   the reward values after the game ends. 
 #   Brain: q_table, does the math for q-learning, track previous moves?
-#
-#   11/6 3:35a
-#   program works but there's something wrong with the chooseAction function.
-#   it always calculates simQval as 0. must fix when im not so tired.
 #   
 ########################################################################
 """
@@ -48,10 +44,9 @@ def main():
     myBoard.displayInfo()
     print(player1.printValues())
     print(player2.printValues())
-    print('^ Starting state')
+    print('^ Starting states')
 
-    
-    print(play(myBoard, player1, player2, 1000))
+    print('Results: \n P1 win count: %s\n P2 win count: %s\n Tie count: %s\n Total Games: %s' % play(myBoard, player1, player2, 1000))
 ## end main
 
 # play number of games and save learnings into player1.q_table and player2.q_table
@@ -67,10 +62,10 @@ def play(gameboard, player1, player2, number):
         
         while True:
             print('\n==ROUND START==')
-            print('round start board.winner', gameboard.winner)
+            # print('round start board.winner', gameboard.winner)
             boardState = gameboard.getBoard()
             positions = gameboard.getPositions()
-            print('available positions', positions)
+            # print('available positions', positions)
 
             p1action = player1.chooseAction(boardState, positions)
             gameOver = gameboard.placeMove(player1.player, p1action)
@@ -80,17 +75,15 @@ def play(gameboard, player1, player2, number):
 
             #Player 2 can only make a move if there are moves left to be played and p1 didnt win
             if not gameOver:
-                # print('len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)
                 p2action = player2.chooseAction(boardState, positions)
                 gameOver = gameboard.placeMove(player2.player, p2action)
                 print('Player -1(O) placing in in', p2action)
                 print('Player -1(O)\'s move result')
                 gameboard.displayBoard()
-                # print('After player -1(O)\'s move: len(positions)=',len(positions),'myBoard.winner=', myBoard.winner)            
             
             # No more available positions on the board. Tie.
             if len(positions) == 0 and gameboard.winner == 0:
-                print('\nBreaking because the game is a tie.')
+                print('\nThe game is a tie.')
                 gameboard.displayBoard()
                 gameboard.displayInfo()
                 print('Tie!')
@@ -101,7 +94,7 @@ def play(gameboard, player1, player2, number):
                 break
             # Found a winner
             if gameboard.winner != 0:
-                print('\nBreaking because there is a winner.')
+                print('\nThere is a winner.')
                 gameboard.displayBoard()
                 gameboard.displayInfo()
                 print('Player %s won!' % gameboard.winner)
@@ -112,14 +105,14 @@ def play(gameboard, player1, player2, number):
                 else:
                     p2win += 1
                 break
-    gamecount = p1win + p2win + tiegame
-    return p1win, p2win, tiegame, gamecount
 
     # print('p1.q_table', p1.q_table)
     # print('p2.q_table', p2.q_table)
     saveAgent(player1)
     saveAgent(player2)
 
+    gamecount = p1win + p2win + tiegame
+    return p1win, p2win, tiegame, gamecount
     # saveAgent(p2)
 ## end play
 
@@ -131,43 +124,10 @@ def saveAgent(player):
         # print('{key:value}', {key:val})
         wfile.writerow({'state' : key,  'action' : val})
 
+# Function to load a saved agent's memory for testing
 def loadAgent(player):
     rfile = csv.DictReader(open('player'+str(player.name)+'memory.csv', 'r'))
     for row in rfile:  
-        # print(row)
-        # print(row['state'], row['action'])
         player.q_table[row['state']] = row['action']
 
-def testingFun():
-    #testing reading csv into q-table of p1 
-    p1 = Brain(1, 'X')
-    print('Checking p1.q_table.', p1.q_table)
-    loadAgent(p1)
-
-    print('Checking p1.q_table.', p1.q_table)
-
-def test():
-    myBoard = Board()   # Init empty bpard
-    myBoard.displayBoard()   #draw board
-    print('^ Starting state')
-
-    myBoard.placeMove(6, (0,0))
-    myBoard.placeMove(6, (0,1))
-    myBoard.placeMove(6, (0,2))
-
-    myBoard.placeMove(6, (1,0))
-    myBoard.placeMove(6, (1,1))
-    myBoard.placeMove(6, (1,2))
-
-    myBoard.placeMove(6, (2,0))
-    myBoard.placeMove(6, (2,1))
-
-    myBoard.displayBoard()
-
-    state = myBoard.board
-
-    p1 = Brain()
-
 main()
-# testingFun()
-# test()
