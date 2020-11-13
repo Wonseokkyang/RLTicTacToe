@@ -22,11 +22,11 @@
 #   board is a 3x3 array with 
 #       0 = empty space
 #       1 = player 1
-#       -1 = player2
+#       2 = player2
 #   ========================
-#   last working on adding available spots to board for brain
-#   ==============
-#
+#   []Checking winning condition can be optimized by only checking the
+#   row/col/diag the last move was palced on instead of the entire board.
+#   []Graphically represent the board instead of using terminal 
 ########################################################################
 """
 from graphics import *
@@ -35,7 +35,6 @@ import numpy as np
 class Board:
     # Initialize gameboard
     def __init__(self):
-        #create a 3x3 2D array with all 0's
         self.board = np.zeros((3,3), dtype='i4')
         #0 for no winner, 1 for p1 winner, 2 for p2 winner, -1 for tie
         self.winner = 0
@@ -53,7 +52,6 @@ class Board:
             raise Exception('ERROR: invalid placeMove(player, position) position.')
         elif self.board[(position)] == 0: #only if empty
             self.board[(position)] = player
-            #remove that position from self.positions
             self.positions.remove((position))
             return self.checkGameOver() #after valid placement, check to see if it's a winning/tie move
         else:
@@ -104,7 +102,8 @@ class Board:
             return False
     ## end checkGameOver
 
-    #optimization oportunity. it's only called once so initialize a list of
+    #optimization oportunity. it's only called once so it should
+    #always start with all board positions
     # Check self.board and get all available/empty spaces
     def setPositions(self):
         positions = []
@@ -120,6 +119,7 @@ class Board:
         return self.positions
     ## end getPositions
 
+    # Return: 2D arr of the board
     def getBoard(self):
         return self.board
     ## end getBoard
