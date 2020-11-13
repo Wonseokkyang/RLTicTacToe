@@ -74,6 +74,7 @@ def play(gameboard, player1, player2, number):
 
             #Player 2 can only make a move if there are moves left to be played and p1 didnt win
             if not gameOver:
+                # p2action = player2.randomAction(boardState, positions)
                 p2action = player2.chooseAction(boardState, positions)
                 gameOver = gameboard.placeMove(player2.player, p2action)
                 print('Player -1(O) placing in in', p2action)
