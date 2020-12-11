@@ -46,12 +46,15 @@ epsilon:    1.0
 ![alt text](https://github.com/Wonseokkyang/RLTicTacToe/blob/master/results/result_1000.jpeg?raw=true)
 ![alt text](https://github.com/Wonseokkyang/RLTicTacToe/blob/master/results/result_10000.jpeg?raw=true)
 #
-The above tests show the dramatic effect of a 0.1 value difference in epsilon value- an agent with an epsilon value of 1.0 always choosing best possible action.
-I can conclude from these tests that the first player to make a move has a definitive advantage over the player who goes second.
+The above tests show the dramatic effect of a 0.1 value difference in epsilon value- an agent with an epsilon value of 1.0 always choosing best possible action. <br/>
 
-This project was just a stepping stone to figure out how to implement a larger project that incorporates both environment exploration from the [Maze project](https://github.com/Wonseokkyang/RLMaze) as well as reactionary decision making process learned in this project. 
+I can conclude from these tests that the first player to make a move has a definitive advantage over the player who goes second. Although the first player has the advantage, once the second player experiences loss from a chain of actions, they learn to interrupt the sequence of states that lead to their loss. <br/>
 
-The result will be a dual agent, reinforced learning [Cat and Mouse](https://github.com/Wonseokkyang/RLCatMouse) program.
+Eventually both agents learn all that they can and *always tie*.
+
+This project was just a stepping stone to figure out how to implement a larger project that incorporates both environment exploration from the [**Maze Project**](https://github.com/Wonseokkyang/RLMaze) as well as reactionary decision making process learned in this project. 
+
+The result will be a dual agent, reinforced learning [**Cat and Mouse**](https://github.com/Wonseokkyang/RLCatMouse) program.
 
 ## Libraries used:
 csv - for saving/loading agent's q-value table for testing purposes <br/>
