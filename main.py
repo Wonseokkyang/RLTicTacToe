@@ -41,12 +41,12 @@ def main():
     print(player2.printValues())
     print('^ Starting states')
 
-    print('\nResults: \n P1 win count: %s\n P2 win count: %s\n Tie count: %s\n Total Games: %s' % play(myBoard, player1, player2, 10000))
+    print('\nResults: \n P1 win count: %s\n P2 win count: %s\n Tie count: %s\n Total Games: %s' % play(myBoard, player1, player2, 1000))
 ## end main
 
-# Play number of games and save learnings into player1.q_table 
+# Play <number> of games and save learnings into player1.q_table 
 # and player2.q_table. Requires player1 and player2 to be preset 
-# before function call
+# before function call.
 def play(gameboard, player1, player2, number):
     p1win = 0
     p2win = 0
@@ -107,7 +107,6 @@ def play(gameboard, player1, player2, number):
 
     gamecount = p1win + p2win + tiegame
     return p1win, p2win, tiegame, gamecount
-    # saveAgent(p2)
 ## end play
 
 # A function to save agent's memory for future testing
