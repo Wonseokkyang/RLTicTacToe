@@ -18,7 +18,6 @@
 #
 ########################################################################
 """
-import pandas as pd
 import numpy as np
 from consts import ALPHA, GAMMA, EPSILON, WIN, LOSE, TIE
 import random
