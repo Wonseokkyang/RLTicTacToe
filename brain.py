@@ -15,15 +15,7 @@
 ########################################################################
 ##                          Notes                                     ##
 ########################################################################
-#   Technically, the player1 and player2 can share the same brain.. 
-#   The move you make doesnt depend on if you're 1 or 2 but where your pieces are
-#   and where your opponents are. 
-#   X| |X                   O| |O  
-#    | |O   is the same as   | |X
-#    |O|                     |X|
-#   So that means convert the state given from the main program to me or not me.
-#   Deffered pre-has conversion until the players alternating playing order
-#   is implemented.
+#
 ########################################################################
 """
 import pandas as pd

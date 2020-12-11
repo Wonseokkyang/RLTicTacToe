@@ -1,4 +1,6 @@
 # Reinforced Learning - Tic-Tac-Toe
+Author: Chase (Won Seok) Yang
+
 Title (A Title Image too if possible…Edit them on canva.com if you are not a graphic designer.)
 Description(Describe by words and images alike)
 Demo(Images, Video links, Live Demo links)

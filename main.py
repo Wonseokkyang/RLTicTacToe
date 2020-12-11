@@ -21,10 +21,6 @@
 ########################################################################
 ##                          Notes                                     ##
 ########################################################################
-#   braindump: 
-#   should I track the the list of moves made? that way I can back propagate
-#   the reward values after the game ends. 
-#   Brain: q_table, does the math for q-learning, track previous moves?
 #   
 ########################################################################
 """
@@ -33,7 +29,6 @@ from brain import Brain
 from consts import ALPHA as alpha, GAMMA as gamma, EPSILON as epsilon
 from consts import WIN as winReward, LOSE as loseReward
 import csv
-
 
 def main():
     myBoard = Board()   # Init empty bpard
@@ -46,7 +41,7 @@ def main():
     print(player2.printValues())
     print('^ Starting states')
 
-    print('Results: \n P1 win count: %s\n P2 win count: %s\n Tie count: %s\n Total Games: %s' % play(myBoard, player1, player2, 1000))
+    print('\nResults: \n P1 win count: %s\n P2 win count: %s\n Tie count: %s\n Total Games: %s' % play(myBoard, player1, player2, 10000))
 ## end main
 
 # Play number of games and save learnings into player1.q_table 
@@ -60,9 +55,10 @@ def play(gameboard, player1, player2, number):
         print('\nResetting gameboard')
         gameboard.resetBoard()
         print('Iteration:', _)
-        
+        print('==ROUND START==')
+
         while True:
-            print('\n==ROUND START==')
+            print('== X TURN ==')
             boardState = gameboard.getBoard()
             positions = gameboard.getPositions()
 
@@ -74,6 +70,7 @@ def play(gameboard, player1, player2, number):
 
             #Player 2 can only make a move if there are moves left to be played and p1 didnt win
             if not gameOver:
+                print('== O TURN ==')
                 # p2action = player2.randomAction(boardState, positions)
                 p2action = player2.chooseAction(boardState, positions)
                 gameOver = gameboard.placeMove(player2.player, p2action)
@@ -105,11 +102,8 @@ def play(gameboard, player1, player2, number):
                 else:
                     p2win += 1
                 break
-
-    # print('p1.q_table', p1.q_table)
-    # print('p2.q_table', p2.q_table)
-    saveAgent(player1)
-    saveAgent(player2)
+    # saveAgent(player1)
+    # saveAgent(player2)
 
     gamecount = p1win + p2win + tiegame
     return p1win, p2win, tiegame, gamecount
