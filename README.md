@@ -25,7 +25,7 @@ At every turn, the agent
 These agents use backpropagation after each learning session and in order to do that they must keep track of their history/moves made. 
 
 ### Example q-table of agent:
-![alt text](https://github.com/Wonseokkyang/RLTicTacToe/blob/master/results/100_result.jpeg?raw=true)
+![alt text](https://github.com/Wonseokkyang/RLTicTacToe/blob/master/results/q_table.jpeg?raw=true)
 
 
 ![alt text](https://github.com/Wonseokkyang/RLTicTacToe/blob/master/results/100_result.jpeg?raw=true)

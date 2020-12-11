@@ -39,7 +39,6 @@ class Board:
         #0 for no winner, 1 for p1 winner, 2 for p2 winner, -1 for tie
         self.winner = 0
         self.setPositions()
-        #self.position = []
     ## end __init__
 
     # Place <player> at board[<position>] and return whether or not the game is over.
